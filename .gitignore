@@ -1,0 +1,9 @@
+.idea*
+*.pyc
+__pycache__
+venv
+#dist
+uvicorn
+data_export/*.csv
+build
+log/*.log

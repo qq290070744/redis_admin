@@ -1,0 +1,9 @@
+.git
+.idea
+__pycache__
+venv
+uvicorn
+data_export/*.csv
+build
+*.png
+log/*.log
