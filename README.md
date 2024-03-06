@@ -9,7 +9,7 @@ Redis Admin是一个Redis管理平台，主要用于方便查看Key信息。
 **[WIKI](https://gitee.com/careyjike_173/redis_web_client/wikis/Home)**
 
 ## 问题反馈
-通过 **[Issues](https://gitee.com/careyjike_173/redis_web_client/issues)** 进行反馈
+通过 **[Issues](https://gitee.com/jiangwenhui_admin/redis_admin/issues)** 进行反馈
 
 ## 截图
 
