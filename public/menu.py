@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding:utf-8
-__author__ = 'carey'
-__date__ = '2017/10/12'
+__author__ = 'jiangwenhui'
+__date__ = '2024/03/01'
 
 from public.redis_api import get_tmp_client, check_redis_connect, get_redis_conf, get_cl
 from users.models import RedisConf
