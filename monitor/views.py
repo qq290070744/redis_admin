@@ -8,7 +8,7 @@ from users.models import RedisConf
 from conf import logs
 import time
 # from dss.Serializer import serializer
-import serializer
+# import serializer
 
 from conf.conf import scan_batch
 from public.redis_api import get_cl, get_redis_conf, redis_conf_save, check_redis_connect, get_redis_info
