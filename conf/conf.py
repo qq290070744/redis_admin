@@ -40,7 +40,7 @@ if db_name:
 else:
     database = {
         "name": "redis_admin",
-        "host": "10.237.44.150",
+        "host": "10.237.44.179",
         "username": "sql_audit",
         "password": "Sql_@#Audit2ws",
         "port": "3306",

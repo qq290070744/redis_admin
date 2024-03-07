@@ -140,10 +140,22 @@ def get_all_keys_tree(client=None, key='*', cursor=0, min_num=None, max_num=None
     client = client or get_client()
     key = key or '*'
     if key == '*':
-        data = client.scan(cursor=cursor, match=key, count=scan_batch, )
+        try:
+            data = client.scan(cursor=cursor, match=key, count=scan_batch, )
+        except Exception as e:
+            print(e)
+            key = '[ -~]' + key
+            data = client.scan(cursor=cursor, match=key, count=scan_batch, )
+
     else:
         key = '*%s*' % key
-        data = client.scan(cursor=cursor, match=key, count=scan_batch, )
+        try:
+            data = client.scan(cursor=cursor, match=key, count=scan_batch, )
+        except Exception as e:
+            print(e)
+            key = '[ -~]' + key
+            data = client.scan(cursor=cursor, match=key, count=scan_batch, )
+
     if isinstance(data, tuple):
         data = data[1]
     elif isinstance(data, dict):
