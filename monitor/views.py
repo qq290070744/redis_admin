@@ -233,7 +233,7 @@ class ClientListView(LoginRequiredMixin, View):
                 page = int(request.GET.get('page', 1))
                 max_num = limit * page
                 min_num = max_num - limit
-                print(client_list)
+                # print(client_list)
                 client_list_data = []
                 client_list_len = 0
                 if isinstance(client_list, list):
