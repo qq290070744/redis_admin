@@ -230,8 +230,18 @@ class ClientListView(LoginRequiredMixin, View):
                 page = int(request.GET.get('page', 1))
                 max_num = limit * page
                 min_num = max_num - limit
+                print(client_list)
+                client_list_data = []
+                client_list_len = 0
+                if isinstance(client_list, list):
+                    client_list_data = client_list[min_num:max_num]
+                    client_list_len = len(client_list)
+                else:
+                    for k, v in client_list.items():
+                        client_list_data += v
+                    client_list_len = len(client_list_data)
 
-                data = {'code': 0, 'msg': '', 'count': len(client_list), 'data': client_list[min_num:max_num]}
+                data = {'code': 0, 'msg': '', 'count': client_list_len, 'data': client_list_data}
         else:
             data = {'code': 1, 'msg': 'Error, 请联系系统管理员！', 'data': ''}
 
