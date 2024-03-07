@@ -4,7 +4,7 @@ import socket
 import sys
 
 from conf import logs
-from conf.conf import base, socket_timeout, scan_batch
+from conf.conf import base, socket_timeout, scan_batch,search_scan_batch
 from redis.exceptions import (
     RedisError,
     ConnectionError,
@@ -148,13 +148,14 @@ def get_all_keys_tree(client=None, key='*', cursor=0, min_num=None, max_num=None
             data = client.scan(cursor=cursor, match=key, count=scan_batch, )
 
     else:
-        key = '*%s*' % key
+        # key = '*%s*' % key
+        key = '%s*' % key
         try:
-            data = client.scan(cursor=cursor, match=key, count=scan_batch, )
+            data = client.scan(cursor=cursor, match=key, count=search_scan_batch, )
         except Exception as e:
             print(e)
             key = '[ -~]' + key
-            data = client.scan(cursor=cursor, match=key, count=scan_batch, )
+            data = client.scan(cursor=cursor, match=key, count=search_scan_batch, )
 
     if isinstance(data, tuple):
         data = data[1]
