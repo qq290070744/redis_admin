@@ -69,11 +69,12 @@ class LoginViews(View):
                     user_premission = dict()
                     for ser in servers:
                         try:
+                            # print(ser.redis)
                             redis_name = RedisConf.objects.get(id=ser.redis)
                             user_premission[redis_name.name] = ser.pre_auth
                         except Exception as e:
                             logs.error(e)
-                            raise e
+                            # raise e
                     data["data"] = user_premission
                     data["menu"] = Menu(user=user)
                     left_menu = []

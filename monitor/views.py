@@ -41,17 +41,20 @@ class GetRedisInfo(LoginRequiredMixin, View):
         servers = get_redis_conf(name=None, user=request.user)
         data = []
         for ser in servers:
-            redis_obj = RedisConf.objects.get(id=ser.redis)
-            if redis_obj.type == 1:
-                redis_cluster_obj = RedisConf.objects.filter(name__iexact=redis_obj.name)
-                for redis_cluster in redis_cluster_obj:
-                    info = self.get_info(redis_cluster)
+            try:
+                redis_obj = RedisConf.objects.get(id=ser.redis)
+                if redis_obj.type == 1:
+                    redis_cluster_obj = RedisConf.objects.filter(name__iexact=redis_obj.name)
+                    for redis_cluster in redis_cluster_obj:
+                        info = self.get_info(redis_cluster)
+                        if not isinstance(info, bool):
+                            data.append(info)
+                else:
+                    info = self.get_info(redis_obj)
                     if not isinstance(info, bool):
                         data.append(info)
-            else:
-                info = self.get_info(redis_obj)
-                if not isinstance(info, bool):
-                    data.append(info)
+            except Exception as e:
+                logs.error(e)
         return render(request, 'index.html', {
             'data': data,
             'console': 'console',
