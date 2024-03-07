@@ -183,7 +183,9 @@ def check_redis_connect(name):
     redis_conf = get_redis_conf(name)
     if isinstance(redis_conf, list):
         try:
-            conn = cluster_connect(conf=redis_conf)
+            conn = cluster_connect(conf=redis_conf,
+                                   username=redis_conf[0]['username'],
+                                   password=redis_conf[0]['password'])
             logs.debug('check redis connect: {0}'.format(redis_conf))
             conn.ping()
             return True
@@ -196,9 +198,9 @@ def check_redis_connect(name):
             return error
     else:
         try:
-            logs.debug("host:{0},port:{1},password:{2},timeout:{3}".format(
-                redis_conf.host, redis_conf.port, redis_conf.password, socket_timeout))
-            conn = Connection(host=redis_conf.host, port=redis_conf.port,
+            logs.debug("host:{0},port:{1},username:{2},password:{3},timeout:{4}".format(
+                redis_conf.host, redis_conf.port, redis_conf.username, redis_conf.password, socket_timeout))
+            conn = Connection(host=redis_conf.host, port=redis_conf.port, username=redis_conf.username,
                               password=redis_conf.password, socket_timeout=socket_timeout)
             conn.connect()
             return True
@@ -220,7 +222,8 @@ def get_cl(redis_name, db_id=0):
             conn = cluster_connect(conf=server, username=server[0]['username'], password=server[0]['password'])
             return conn
         else:
-            if server[0]['password'] is None:
+            # print(server)
+            if server.password is None:
                 cl = get_client(host=server.host, port=server.port, db=cur_db_index,
                                 username=None, password=None)
             else:
