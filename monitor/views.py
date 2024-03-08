@@ -7,6 +7,7 @@ from django.urls import reverse
 from users.models import RedisConf
 from conf import logs
 import time
+import threading
 # from dss.Serializer import serializer
 # import serializer
 
@@ -40,7 +41,9 @@ class GetRedisInfo(LoginRequiredMixin, View):
         # print request.META["HTTP_REFERER"]
         servers = get_redis_conf(name=None, user=request.user)
         data = []
-        for ser in servers:
+        threading_li = []
+
+        def sync_exec(ser):
             try:
                 redis_obj = RedisConf.objects.get(id=ser.redis)
                 if redis_obj.type == 1:
@@ -55,6 +58,13 @@ class GetRedisInfo(LoginRequiredMixin, View):
                         data.append(info)
             except Exception as e:
                 logs.error(e)
+
+        for ser in servers:
+            t = threading.Thread(target=sync_exec, args=(ser,))
+            t.start()
+            threading_li.append(t)
+        for t in threading_li:
+            t.join()
         return render(request, 'index.html', {
             'data': data,
             'console': 'console',
