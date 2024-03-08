@@ -24,3 +24,9 @@ Redis Admin是一个Redis管理平台，主要用于方便查看Key信息。
 ![](/static/img/2.png)
 
 ![](/static/img/3.png)
+
+![](/static/img/4.png)
+
+![](/static/img/5.png)
+
+![](/static/img/6.png)
