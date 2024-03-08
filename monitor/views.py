@@ -98,18 +98,20 @@ class CheckRedisContent(LoginRequiredMixin, View):
         servers = get_redis_conf(name=None, user=request.user)
         data_list = []
         for ser in servers:
-            redis_obj = RedisConf.objects.get(id=ser.redis)
-            if redis_obj.type == 1:
-                redis_cluster_obj = RedisConf.objects.filter(name__iexact=redis_obj.name)
-                for redis_cluster in redis_cluster_obj:
-                    redis_status = self.check_redis_status(redis_cluster)
+            try:
+                redis_obj = RedisConf.objects.get(id=ser.redis)
+                if redis_obj.type == 1:
+                    redis_cluster_obj = RedisConf.objects.filter(name__iexact=redis_obj.name)
+                    for redis_cluster in redis_cluster_obj:
+                        redis_status = self.check_redis_status(redis_cluster)
+                        if redis_status is not True:
+                            data_list.append(redis_status)
+                else:
+                    redis_status = self.check_redis_status(redis_obj)
                     if redis_status is not True:
                         data_list.append(redis_status)
-            else:
-                redis_status = self.check_redis_status(redis_obj)
-                if redis_status is not True:
-                    data_list.append(redis_status)
-
+            except Exception as e:
+                logs.error(e)
         if len(data_list) != 0:
             data = {'code': 0, 'msg': '', 'data': data_list}
         else:
