@@ -24,7 +24,7 @@ mail_user = 'test@test.com'
 mail_pass = ''
 mail_receivers = ["test@test.com", "test2@test.com"]
 admin_mail = ["test@test.com"]  # 管理员邮箱
-
+PYTHONENV = os.getenv('PYTHONENV')
 db_name = os.getenv("db_name")
 db_user = os.getenv("db_user")
 db_pwd = os.getenv("db_pwd")

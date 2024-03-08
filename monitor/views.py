@@ -11,7 +11,7 @@ import threading
 # from dss.Serializer import serializer
 # import serializer
 
-from conf.conf import scan_batch
+from conf.conf import scan_batch, search_scan_batch, PYTHONENV
 from public.redis_api import get_cl, get_redis_conf, redis_conf_save, check_redis_connect, get_redis_info
 from utils.utils import LoginRequiredMixin
 
@@ -68,6 +68,7 @@ class GetRedisInfo(LoginRequiredMixin, View):
         return render(request, 'index.html', {
             'data': data,
             'console': 'console',
+            "PYTHONENV": PYTHONENV
         })
 
 
