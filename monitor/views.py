@@ -80,6 +80,7 @@ class RedisErrorHtmlView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'redis_error.html', {
             'error': 'error',
+            "PYTHONENV": PYTHONENV
         })
 
 
@@ -225,6 +226,7 @@ class GetIdView(LoginRequiredMixin, View):
             'db_id': id,
             'redis_name': redis_name,
             'db_num': 'db' + str(id),
+            "PYTHONENV": PYTHONENV
         })
 
 
@@ -268,6 +270,7 @@ class ClientHtmlView(LoginRequiredMixin, View):
     def get(self, request, client_id):
         return render(request, 'client_list.html', {
             'client_id': client_id,
+            "PYTHONENV": PYTHONENV
         })
 
 
@@ -484,6 +487,7 @@ class RedisListView(LoginRequiredMixin, View):
             data["data"] = redis_li
             return JsonResponse(data=data)
         return render(request, 'redis_list.html', {
+            "PYTHONENV": PYTHONENV
         })
 
 

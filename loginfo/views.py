@@ -8,6 +8,7 @@ from public.menu import Menu
 from utils.utils import LoginRequiredMixin
 from loginfo.models import OperationInfo
 from users.models import DctUser
+from conf.conf import PYTHONENV
 
 
 # Create your views here.
@@ -42,6 +43,7 @@ class OperationInfoEditView(LoginRequiredMixin, View):
 
         return render(request, 'operation_edit.html', {
             'record': 'record',
+            "PYTHONENV": PYTHONENV
         })
 
 
@@ -73,6 +75,7 @@ class OperationInfoDelView(LoginRequiredMixin, View):
 
         return render(request, 'operation_del.html', {
             'record': 'record',
+            "PYTHONENV": PYTHONENV
         })
 
 
@@ -98,9 +101,9 @@ class UserManageView(LoginRequiredMixin, View):
 
             return JsonResponse(data, safe=False)
 
-
         return render(request, 'user_manage.html', {
             'top_menu': 'user',
+            "PYTHONENV": PYTHONENV
         })
 
     def post(self, request):

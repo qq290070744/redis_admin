@@ -16,7 +16,7 @@ from utils.utils import LoginRequiredMixin
 from public.menu import Menu
 from users.models import Auth, RedisConf
 from public.sendmail import send_email
-from conf.conf import admin_mail
+from conf.conf import admin_mail,PYTHONENV
 from conf import logs
 
 # Create your views here.
@@ -252,6 +252,7 @@ class AddUser(LoginRequiredMixin, View):
 
         return render(request, 'add_user.html', {
             'rediss': redis,
+            "PYTHONENV": PYTHONENV
         })
 
     def post(self, request):
