@@ -147,7 +147,12 @@ class GetKeyView(LoginRequiredMixin, View):
         for key in keys:
             # print(type(key))
             if is_binary(key):
-                key = str(key, encoding="utf-8")
+                try:
+                    key = key.decode('utf-8')
+                except Exception as e:
+                    logs.error(e)
+                    key = str(key)
+                    # print(key)
             values.append({'key': key})
 
         db_key_num = cl.dbsize()
