@@ -356,6 +356,7 @@ class EditValueTableView(LoginRequiredMixin, View):
             'db_num': 'db' + str(edit_db_id),
             'redis_name': redis_name,
             'data': value,
+            "PYTHONENV": PYTHONENV
         })
 
     def post(self, request, redis_name, edit_db_id):
@@ -416,7 +417,8 @@ class EditValueTableView(LoginRequiredMixin, View):
         return render(request, 'edit.html', {
             'db_num': 'db' + str(edit_db_id),
             'redis_name': redis_name,
-            'data': data
+            'data': data,
+            "PYTHONENV": PYTHONENV
         })
 
 
@@ -445,6 +447,7 @@ class AddKeyView(LoginRequiredMixin, View):
         return render(request, 'add_key.html', {
             'this_tab': this_tab,
             'db': db_id,
+            "PYTHONENV": PYTHONENV
         })
 
     def post(self, request, redis_name):
@@ -521,7 +524,9 @@ class RedisEditView(LoginRequiredMixin, View):
 
 class RedisAddView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'redis_add.html', {'X-Frame-Options': 'ALLOW-FROM'}, )
+        return render(request, 'redis_add.html', {
+            'X-Frame-Options': 'ALLOW-FROM',
+            "PYTHONENV": PYTHONENV}, )
 
     def post(self, request):
         data = {"code": 0, "data": "", "msg": "成功"}
