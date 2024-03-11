@@ -2,6 +2,7 @@
 
 from conf.conf import scan_batch
 from public.redis_api import get_cl
+from utils.utils import is_binary
 
 
 class ChangeData(object):
@@ -40,6 +41,9 @@ class ChangeData(object):
 
     def edit_value(self, key, value, new, score):
         type = self.cl.type(key)
+        # print(type)
+        if is_binary(type):
+            type = type.decode('utf-8')
         if type == "hash":
             self.cl.hset(key, value, new)
         elif type == "list":

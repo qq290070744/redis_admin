@@ -13,7 +13,7 @@ import threading
 
 from conf.conf import scan_batch, search_scan_batch, PYTHONENV
 from public.redis_api import get_cl, get_redis_conf, redis_conf_save, check_redis_connect, get_redis_info
-from utils.utils import LoginRequiredMixin
+from utils.utils import LoginRequiredMixin, is_binary
 
 
 # Create your views here.
@@ -145,6 +145,9 @@ class GetKeyView(LoginRequiredMixin, View):
         else:
             keys = get_all_keys_tree(client=cl, cursor=0, min_num=min_num, max_num=max_num)
         for key in keys:
+            # print(type(key))
+            if is_binary(key):
+                key = str(key, encoding="utf-8")
             values.append({'key': key})
 
         db_key_num = cl.dbsize()
@@ -159,7 +162,7 @@ class GetKeyView(LoginRequiredMixin, View):
         else:
             key_num = batch_key_num
         key_value_dict = {'code': 0, 'msg': '', 'count': key_num, 'data': values}
-
+        # print(values)
         return JsonResponse(key_value_dict, safe=False)
 
 
@@ -193,7 +196,16 @@ class GetValueView(LoginRequiredMixin, View):
         else:
             logs.warning('key is not exists: redis_name={0}, db={1}, key={2}'.format(redis_name, value_db_id, key))
             value_dict['code'] = 1
-
+        for k in value_dict:
+            # print(k, value_dict[k])
+            if is_binary(value_dict[k]):
+                value_dict[k] = str(value_dict[k], encoding="utf-8")
+        if isinstance(value_dict['data'], dict):
+            for k, v in value_dict['data'].items():
+                # print(k, v)
+                if is_binary(v):
+                    value_dict['data'][k] = str(v, encoding="utf-8")
+        # print(value_dict)
         return JsonResponse(value_dict, safe=False)
 
     def post(self, request, redis_name, value_db_id, key):
@@ -333,7 +345,8 @@ class EditValueTableView(LoginRequiredMixin, View):
                     num += 1
                     value_list.append(value_dict)
                 value['value'] = value_list
-
+        if is_binary(value['value']):
+            value['value'] = str(value['value'], encoding="utf-8")
         return render(request, 'edit.html', {
             'db_num': 'db' + str(edit_db_id),
             'redis_name': redis_name,

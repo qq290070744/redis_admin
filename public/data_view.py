@@ -9,6 +9,7 @@ except ImportError:
     from cgi import escape  # python 2.x
 from public.redis_api import get_redis_info
 from conf import logs
+from utils.utils import is_binary
 
 
 def get_value(fullkey, db, client):
@@ -27,9 +28,14 @@ def get_value(fullkey, db, client):
         m_encoding = ''
     m_len = 0
     val = []
+    if is_binary(m_type):
+        m_type = str(m_type, encoding='utf-8')
 
     if m_type == 'string':
         val = cl.get(fullkey)
+        if is_binary(val):
+            val = cl.get(fullkey).decode("utf-8")
+        # print(val)
         m_len = len(val)
 
     if m_type == 'hash':

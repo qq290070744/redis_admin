@@ -223,7 +223,7 @@ def get_cl(redis_name, db_id=0):
             conn = cluster_connect(conf=server, username=server[0]['username'], password=server[0]['password'])
             return conn
         else:
-            # print(server)
+            # print(server.host)
             if server.password is None:
                 cl = get_client(host=server.host, port=server.port, db=cur_db_index,
                                 username=None, password=None)
