@@ -41,7 +41,7 @@ layui.use('table', function(){
   var $ = layui.$, active = {
     reload: function(){
       var demoReload = $('#demoReload');
-
+      layer.load('loading');
       table.reload('testReload', {
         where: {
           key: {
@@ -49,6 +49,7 @@ layui.use('table', function(){
           }
         }
       });
+      layer.closeAll('loading');
     },
     addkey: function () {
         window.location.href="/add/key/{{ redis_name }}/?db={{ db_id }}"
