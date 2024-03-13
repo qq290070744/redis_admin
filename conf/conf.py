@@ -16,7 +16,7 @@ base = {
 }
 socket_timeout = 2
 scan_batch = 10000  # scan 限制获取数据量
-search_scan_batch = 1000000  # 搜索 scan 限制获取数据量
+search_scan_batch = 100000  # 搜索 scan 限制获取数据量
 show_key_self_count = False
 
 mail_host = 'smtp.exmail.qq.com'

@@ -4,7 +4,7 @@ import socket
 import sys
 
 from conf import logs
-from conf.conf import base, socket_timeout, scan_batch,search_scan_batch
+from conf.conf import base, socket_timeout, scan_batch, search_scan_batch
 from redis.exceptions import (
     RedisError,
     ConnectionError,
@@ -156,6 +156,23 @@ def get_all_keys_tree(client=None, key='*', cursor=0, min_num=None, max_num=None
             print(e)
             key = '[ -~]' + key
             data = client.scan(cursor=cursor, match=key, count=search_scan_batch, )
+        iteration_num = cursor
+        for i in data:
+            # print(i)
+            iteration_num = data[i][0]
+            data[i] = list(data[i])
+            data[i][1] = list(data[i][1])
+            # print(iteration_num)
+        while iteration_num != 0:
+            new_data = client.scan(cursor=iteration_num, match=key, count=search_scan_batch, )
+            for i in new_data:
+                iteration_num = new_data[i][0]
+                data[i] = list(data[i])
+                data[i][1] += new_data[i][1]
+                # print(new_data[i][1])
+                # print(iteration_num)
+            if len(data[i][1]) >= search_scan_batch:
+                break
 
     if isinstance(data, tuple):
         data = data[1]
