@@ -157,27 +157,38 @@ def get_all_keys_tree(client=None, key='*', cursor=0, min_num=None, max_num=None
             key = '[ -~]' + key
             data = client.scan(cursor=cursor, match=key, count=search_scan_batch, )
         iteration_num = cursor
-        for i in data:
-            # print(i)
-            iteration_num = data[i][0]
-            data[i] = list(data[i])
-            data[i][1] = list(data[i][1])
-            # print(iteration_num)
-        key_count = 0
-        while iteration_num != 0:
-            new_data = client.scan(cursor=iteration_num, match=key, count=search_scan_batch, )
-            for i in new_data:
-                iteration_num = new_data[i][0]
+        if isinstance(data, dict):
+            for i in data:
+                # print(i)
+                iteration_num = data[i][0]
                 data[i] = list(data[i])
-                data[i][1] += new_data[i][1]
-                key_count += len(new_data[i][1])
-                # print(new_data[i][1])
+                data[i][1] = list(data[i][1])
                 # print(iteration_num)
-            # print(key_count)
-            if key_count >= search_scan_batch:
-                break
+            key_count = 0
+            while iteration_num != 0:
+                new_data = client.scan(cursor=iteration_num, match=key, count=search_scan_batch, )
+                for i in new_data:
+                    iteration_num = new_data[i][0]
+                    data[i] = list(data[i])
+                    data[i][1] += new_data[i][1]
+                    key_count += len(new_data[i][1])
+                    # print(new_data[i][1])
+                    # print(iteration_num)
+                # print(key_count)
+                if key_count >= search_scan_batch:
+                    break
+        elif isinstance(data, tuple):
+            data = list(data)
+            # print(data)
+            iteration_num = data[0]
+            key_count = 0
+            while iteration_num != 0:
+                new_data = client.scan(cursor=iteration_num, match=key, count=search_scan_batch, )
+                iteration_num = new_data[0]
+                data[1] += new_data[1]
+                key_count += len(new_data[1])
 
-    if isinstance(data, tuple):
+    if isinstance(data, list):
         data = data[1]
     elif isinstance(data, dict):
         data_list = list()
