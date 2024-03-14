@@ -188,7 +188,7 @@ def get_all_keys_tree(client=None, key='*', cursor=0, min_num=None, max_num=None
                 data[1] += new_data[1]
                 key_count += len(new_data[1])
 
-    if isinstance(data, list):
+    if isinstance(data, list) or isinstance(data, tuple):
         data = data[1]
     elif isinstance(data, dict):
         data_list = list()
