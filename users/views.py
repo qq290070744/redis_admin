@@ -276,8 +276,10 @@ class AddUser(LoginRequiredMixin, View):
                     user = DctUser.objects.create_superuser(username=username, email=email, password=password1)
 
                 # 添加权限
-                rediss = RedisConf.objects.all()
-
+                rediss = RedisConf.objects.filter(type=0)
+                cluster = get_all_cluster_redis()
+                rediss = list(rediss)
+                rediss += cluster
                 for re in rediss:
                     re_id = request.POST.get(re.name, None)
                     # 判断是否获取到值
