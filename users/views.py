@@ -16,8 +16,9 @@ from utils.utils import LoginRequiredMixin
 from public.menu import Menu
 from users.models import Auth, RedisConf
 from public.sendmail import send_email
-from conf.conf import admin_mail,PYTHONENV
+from conf.conf import admin_mail, PYTHONENV
 from conf import logs
+
 
 # Create your views here.
 
@@ -141,7 +142,7 @@ class ChangeUser(LoginRequiredMixin, View):
                     # ''为删除权限
                     user.auths.get(redis=re.id).delete()
                 except Exception as e:
-                    logs.error(u"删除权限失败:user_id:{0},redis:{1},msg:{2}".format(id,re.id,e))
+                    logs.error(u"删除权限失败:user_id:{0},redis:{1},msg:{2}".format(id, re.id, e))
                 continue
 
             pre_auth = int(re_id)  # 权限数
@@ -248,10 +249,12 @@ class EditUser(LoginRequiredMixin, View):
 
 class AddUser(LoginRequiredMixin, View):
     def get(self, request):
-        redis = RedisConf.objects.all()
+        redis = RedisConf.objects.filter(type=0)
+        cluster = get_all_cluster_redis()
 
         return render(request, 'add_user.html', {
             'rediss': redis,
+            'clusters': cluster,
             "PYTHONENV": PYTHONENV
         })
 
@@ -319,7 +322,8 @@ class UserRegisterView(View):
                 data["msg"] = "用户已被注册"
             except ObjectDoesNotExist:
                 DctUser.objects.create_user(username=username, email=email, password=password1)
-                send_email("[redis管理平台]用户注册", u"用户:{0}，邮箱:{1} \n\t注册redis管理平台请分配权限".format(username, email),
+                send_email("[redis管理平台]用户注册",
+                           u"用户:{0}，邮箱:{1} \n\t注册redis管理平台请分配权限".format(username, email),
                            receivers=admin_mail)
                 data["code"] = 0
                 data["msg"] = "注册成功"
@@ -332,4 +336,3 @@ class UserRegisterView(View):
             data["code"] = 1
             data["msg"] = "error"
         return JsonResponse(data=data, safe=False)
-
