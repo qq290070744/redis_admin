@@ -108,7 +108,7 @@ class UserManageView(LoginRequiredMixin, View):
 
     def post(self, request):
 
-        if request.is_ajax():
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             id = request.POST.get('id', None)
 
             data = {'code': 0, 'msg': '', 'data': ''}
