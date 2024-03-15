@@ -55,7 +55,7 @@ def get_all_cluster_redis():
 
 def get_redis_conf(name=None, user=None):
     if name is None and user is not None:
-        return user.auths.all()
+        return user.auths.all().order_by('id')
     else:
         try:
             return RedisConf.objects.get(name=name)

@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.core.paginator import Paginator
 from users.models import RedisConf
 from conf import logs
 import time
@@ -40,6 +41,16 @@ class GetRedisInfo(LoginRequiredMixin, View):
     def get(self, request):
         # print request.META["HTTP_REFERER"]
         servers = get_redis_conf(name=None, user=request.user)
+        # "分页"
+        # limit = int(request.GET.get('limit', 2))
+        paginator = Paginator(servers, 1)  # 每页显示一个集群
+        page = int(request.GET.get('page', 1))
+        # start = (page - 1) * limit
+        # end = start + limit
+        # servers = servers[start:end]
+        servers = paginator.get_page(page)
+        # print(start, end)
+        # print(len(servers))
         data = []
         threading_li = []
 
@@ -68,6 +79,7 @@ class GetRedisInfo(LoginRequiredMixin, View):
         return render(request, 'index.html', {
             'data': data,
             'console': 'console',
+            'current_page': servers,
             "PYTHONENV": PYTHONENV
         })
 

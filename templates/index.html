@@ -1,56 +1,111 @@
 {% extends 'base.html' %}
 {% block title %}控制台{% endblock %}
 {% block content %}
-<div class="layui-row layui-col-space20">
-{% for info in data %}
-      <div class="layui-col-md6">
-        <table class="layui-table" >
-			  <colgroup>
-			    <col width="15">
-			    <col width="20">
-			    <col>
-			  </colgroup>
-			  <tbody>
-			    <tr>
-			      <td>IP地址</td>
-			      <td>{{ info.host }}</td>
-			    </tr>
-                <tr>
-			      <td>端口</td>
-			      <td>{{ info.tcp_port }}</td>
-			    </tr>
-			    <tr>
-			      <td>版本</td>
-			      <td>{{ info.redis_version }}</td>
-			    </tr>
-			    <tr>
-			      <td>系统</td>
-			      <td>{{ info.os }}</td>
-			    </tr>
-			    <tr>
-			      <td>使用内存</td>
-			      <td>{{ info.used_memory_human }}</td>
-			    </tr>
-			    <tr>
-			      <td>运行天数</td>
-			      <td>{{ info.uptime_in_days }}天</td>
-			    </tr>
-			    <tr>
-			      <td>客户端数量</td>
-			      <td>{{ info.connected_clients }}&nbsp&nbsp&nbsp&nbsp&nbsp<a href="/client/{{ info.redis_id }}/" class="layui-btn layui-btn-small layui-btn-normal layui-btn-radius">查看详细客户端</a></td>
-			    </tr>
-			    <tr>
-			      <td>阻塞的客户端数</td>
-			      <td>{{ info.blocked_clients }}</td>
-			    </tr>
-			    <tr>
-			      <td>数据保存时间</td>
-			      <td>{{ info.rdb_last_save_time }}&nbsp&nbsp&nbsp&nbsp&nbsp<a href="/bgsave/{{ info.redis_id }}/" class="layui-btn layui-btn-small layui-btn-normal layui-btn-radius">保存数据</a></td>
-			    </tr>
-			  </tbody>
-			</table>
+    <div class="layui-row layui-col-space20">
+        {% for info in data %}
+            <div class="layui-col-md6">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="15">
+                        <col width="20">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <td>IP地址</td>
+                        <td>{{ info.host }}</td>
+                    </tr>
+                    <tr>
+                        <td>端口</td>
+                        <td>{{ info.tcp_port }}</td>
+                    </tr>
+                    <tr>
+                        <td>版本</td>
+                        <td>{{ info.redis_version }}</td>
+                    </tr>
+                    <tr>
+                        <td>系统</td>
+                        <td>{{ info.os }}</td>
+                    </tr>
+                    <tr>
+                        <td>使用内存</td>
+                        <td>{{ info.used_memory_human }}</td>
+                    </tr>
+                    <tr>
+                        <td>运行天数</td>
+                        <td>{{ info.uptime_in_days }}天</td>
+                    </tr>
+                    <tr>
+                        <td>客户端数量</td>
+                        <td>{{ info.connected_clients }}&nbsp&nbsp&nbsp&nbsp&nbsp<a href="/client/{{ info.redis_id }}/"
+                                                                                    class="layui-btn layui-btn-small layui-btn-normal layui-btn-radius">查看详细客户端</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>阻塞的客户端数</td>
+                        <td>{{ info.blocked_clients }}</td>
+                    </tr>
+                    <tr>
+                        <td>数据保存时间</td>
+                        <td>{{ info.rdb_last_save_time }}&nbsp&nbsp&nbsp&nbsp&nbsp<a href="/bgsave/{{ info.redis_id }}/"
+                                                                                     class="layui-btn layui-btn-small layui-btn-normal layui-btn-radius">保存数据</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
-      </div>
-{% endfor %}
-</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination layui-laypage">
+    <span class="step-links">
+        {% if current_page.has_previous %}
+            <a href="?page=1">&laquo; 第一页</a>
+            <a href="?page={{ current_page.previous_page_number }}">上一页</a>
+        {% endif %}
+
+        <span class="current layui-laypage-curr">
+            页码：{{ current_page.number }} / {{ current_page.paginator.num_pages }}.
+        </span>
+
+        {% if current_page.has_next %}
+            <a href="?page={{ current_page.next_page_number }}">下一页</a>
+            <a href="?page={{ current_page.paginator.num_pages }}">最后一页 &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
+
+    <style>
+        .layui-laypage a, .layui-laypage span {
+            color: #337ab7;
+        }
+
+        .layui-laypage .layui-laypage-curr em {
+            background-color: #337ab7;
+            color: #fff;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            color: #337ab7;
+            text-decoration: none;
+        }
+
+        .pagination a:hover {
+            color: #23527c;
+            text-decoration: underline;
+        }
+
+        .pagination .current {
+            font-weight: bold;
+        }
+    </style>
+
+
 {% endblock %}
