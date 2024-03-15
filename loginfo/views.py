@@ -32,11 +32,12 @@ class OperationInfoEditView(LoginRequiredMixin, View):
 
             if search_data is not None:
                 db_count = OperationInfo.objects.filter(Q(type='edit') & Q(key__contains=search_data)).count()
-                db_data = list(OperationInfo.objects.filter(Q(type='edit') & Q(key__contains=search_data))[
-                               min_num:max_num].values())
+                db_data = list(
+                    OperationInfo.objects.filter(Q(type='edit') & Q(key__contains=search_data)).order_by('-id')[
+                    min_num:max_num].values())
             else:
                 db_count = OperationInfo.objects.filter(type='edit').count()
-                db_data = list(OperationInfo.objects.filter(type='edit')[min_num:max_num].values())
+                db_data = list(OperationInfo.objects.filter(type='edit').order_by('-id')[min_num:max_num].values())
             data = {'code': 0, 'msg': '', 'count': db_count, 'data': db_data}
 
             return JsonResponse(data, safe=False)
@@ -64,11 +65,12 @@ class OperationInfoDelView(LoginRequiredMixin, View):
 
             if search_data is not None:
                 db_count = OperationInfo.objects.filter(Q(type='del') & Q(key__contains=search_data)).count()
-                db_data = list(OperationInfo.objects.filter(Q(type='del') & Q(key__contains=search_data))[
-                               min_num:max_num].values())
+                db_data = list(
+                    OperationInfo.objects.filter(Q(type='del') & Q(key__contains=search_data)).order_by('-id')[
+                    min_num:max_num].values())
             else:
                 db_count = OperationInfo.objects.filter(type='del').count()
-                db_data = list(OperationInfo.objects.filter(type='del')[min_num:max_num].values())
+                db_data = list(OperationInfo.objects.filter(type='del').order_by('-id')[min_num:max_num].values())
             data = {'code': 0, 'msg': '', 'count': db_count, 'data': db_data}
 
             return JsonResponse(data, safe=False)
