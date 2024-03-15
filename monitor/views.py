@@ -30,7 +30,8 @@ class GetRedisInfo(LoginRequiredMixin, View):
         if status is True:
             client = get_cl(redis_name=redis_obj.name)
             info_dict = get_redis_info(cl=client, number=1)
-            time_local = time.localtime(info_dict['rdb_last_save_time'])
+            # print(info_dict)
+            time_local = time.localtime(info_dict.get('rdb_last_save_time'))
             dt = time.strftime("%Y-%m-%d %H:%M:%S", time_local)
             info_dict['rdb_last_save_time'] = dt
             info_dict.update(host=redis_obj.host)
@@ -43,7 +44,7 @@ class GetRedisInfo(LoginRequiredMixin, View):
         servers = get_redis_conf(name=None, user=request.user)
         # "分页"
         # limit = int(request.GET.get('limit', 2))
-        paginator = Paginator(servers, 1)  # 每页显示一个集群
+        paginator = Paginator(servers, 2)  # 每页显示2个集群
         page = int(request.GET.get('page', 1))
         # start = (page - 1) * limit
         # end = start + limit
@@ -57,14 +58,30 @@ class GetRedisInfo(LoginRequiredMixin, View):
         def sync_exec(ser):
             try:
                 redis_obj = RedisConf.objects.get(id=ser.redis)
+                # print(ser)
+                # print(ser.redis)
+                # print(redis_obj.name)
                 if redis_obj.type == 1:
                     redis_cluster_obj = RedisConf.objects.filter(name__iexact=redis_obj.name)
-                    for redis_cluster in redis_cluster_obj:
+
+                    def sync_exec1(redis_cluster):
                         info = self.get_info(redis_cluster)
+                        info['name'] = redis_obj.name
                         if not isinstance(info, bool):
                             data.append(info)
+
+                    threads1 = []
+                    for redis_cluster in redis_cluster_obj:
+                        t1 = threading.Thread(target=sync_exec1, args=(redis_cluster,))
+                        t1.start()
+                        threads1.append(t1)
+                    for t1 in threads1:
+                        t1.join()
                 else:
+                    # print(redis_obj.name)
                     info = self.get_info(redis_obj)
+                    # print(redis_obj.name)
+                    info['name'] = redis_obj.name
                     if not isinstance(info, bool):
                         data.append(info)
             except Exception as e:
