@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -40,6 +41,9 @@ class Auth(models.Model):
         verbose_name_plural = verbose_name
         db_table = 'premission'
 
+    def __str__(self):
+        return str(self.redis) + ' - ' + dict(Auth.PREMISSION_CHOICES)[self.pre_auth]
+
 
 class DctUser(AbstractUser):
     img = models.CharField(default='/static/img/default.jpg', max_length=200, verbose_name=u'用户头像')
@@ -51,12 +55,3 @@ class DctUser(AbstractUser):
 
     def __str__(self):
         return self.username
-
-
-
-
-
-
-
-
-
