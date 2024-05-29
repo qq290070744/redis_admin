@@ -239,6 +239,22 @@ class GetValueView(LoginRequiredMixin, View):
                 # print(k, v)
                 if is_binary(v):
                     value_dict['data'][k] = str(v, encoding="utf-8")
+        if isinstance(value_dict['data']['value'], list):
+            for index, v in enumerate(value_dict['data']['value']):
+                # print(index, v)
+                if is_binary(v):
+                    value_dict['data']['value'][index] = str(v, encoding="utf-8")
+        if isinstance(value_dict['data']['value'], dict):
+            new_dic = {}
+            for k, v in value_dict['data']['value'].items():
+                # print(k, v)
+                if is_binary(v):
+                    if is_binary(k):
+                        k = str(k, encoding="utf-8")
+                    v = str(v, encoding="utf-8")
+                    new_dic[k] = v
+                    # value_dict['data']['value'][k] = str(v, encoding="utf-8")
+            value_dict['data']['value'] = new_dic
         # print(value_dict)
         return JsonResponse(value_dict, safe=False)
 
