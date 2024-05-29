@@ -252,8 +252,7 @@ class GetValueView(LoginRequiredMixin, View):
                     if is_binary(k):
                         k = str(k, encoding="utf-8")
                     v = str(v, encoding="utf-8")
-                    new_dic[k] = v
-                    # value_dict['data']['value'][k] = str(v, encoding="utf-8")
+                new_dic[k] = v
             value_dict['data']['value'] = new_dic
         # print(value_dict)
         return JsonResponse(value_dict, safe=False)
