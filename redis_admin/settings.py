@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import datetime
 import os
 import sys
 from conf.conf import DEBUG, LOG_LEVEL, database
@@ -123,10 +124,9 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'Asia/Shanghai'
-
+USE_TZ = True
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
 
 LOGGING = {
     'version': 1,

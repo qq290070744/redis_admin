@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import JsonResponse
 from django.db.models import Q
-
+from django.utils import timezone
 from public.menu import Menu
 from utils.utils import LoginRequiredMixin
 from loginfo.models import OperationInfo
@@ -99,6 +99,17 @@ class UserManageView(LoginRequiredMixin, View):
             else:
                 db_count = DctUser.objects.all().count()
                 db_data = list(DctUser.objects.all()[min_num:max_num].values())
+
+            # 处理一下时间
+            for i in db_data:
+                try:
+                    # add_8_time = i['last_login'].strftime('%Y-%m-%d %H:%M:%S')
+                    add_8_time = timezone.localtime(i['last_login'])
+                    # print(add_8_time)
+                    i['last_login'] = add_8_time
+                except Exception as e:
+                    print(e)
+
             data = {'code': 0, 'msg': '', 'count': db_count, 'data': db_data}
 
             return JsonResponse(data, safe=False)
