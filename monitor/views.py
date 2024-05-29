@@ -248,9 +248,9 @@ class GetValueView(LoginRequiredMixin, View):
             new_dic = {}
             for k, v in value_dict['data']['value'].items():
                 # print(k, v)
+                if is_binary(k):
+                    k = str(k, encoding="utf-8")
                 if is_binary(v):
-                    if is_binary(k):
-                        k = str(k, encoding="utf-8")
                     v = str(v, encoding="utf-8")
                 new_dic[k] = v
             value_dict['data']['value'] = new_dic
